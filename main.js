@@ -72,6 +72,7 @@ import { Sky } from './node_modules/three/examples/jsm/objects/Sky.js';
 
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 let container, stats;
 let camera, scene, renderer;
@@ -79,6 +80,29 @@ let controls, water, sun, mesh;
 
 init();
 animate();
+
+function MTLAndOBJLoader(mtlPath, objPath) {
+    const mtlLoader = new MTLLoader();
+    const objLoader = new OBJLoader();
+
+    mtlLoader.load(mtlPath, function (materials) {
+        materials.preload();
+        objLoader.setMaterials(materials);
+        objLoader.load(objPath, function (object) {
+            scene.add(object);
+        });
+    });
+}
+
+function EasyGLTFLoader(path, scene, size, x, y, z) {
+    const gltfLoader = new GLTFLoader();
+    gltfLoader.load(path, function (gltf) {
+        scene.add(gltf.scene);
+        gltf.scene.scale.set(size, size, size);
+        gltf.scene.position.set(x, y, z);
+    });
+}
+
 
 function init() {
 
@@ -112,21 +136,17 @@ function init() {
     camera.add(pointLight);
     scene.add(camera);
 
+    MTLAndOBJLoader('./assets/maki_single_2.mtl', './assets/maki_single_2.obj', scene);
 
-    const objLoader = new OBJLoader();
-    const mtlLoader = new MTLLoader();
+    MTLAndOBJLoader('./assets/landscape_ground/landscape_ground.mtl', './assets/landscape_ground/landscape_ground.obj', scene);
+    MTLAndOBJLoader('./assets/landscape_water/landscape_water.mtl', './assets/landscape_water/landscape_water.obj', scene);
 
-    mtlLoader.load('./maki_single.mtl', function (materials) {
-        materials.preload();
-        objLoader.setMaterials(materials);
-        objLoader.load('./maki_single.obj', function (object) {
-            scene.add(object);
-        });
-        console.log(objLoader.parse())
-    });
-
-
-    //
+    EasyGLTFLoader('./assets/momiji_01/momiji.glb', scene, 1, 0, 0, 0);
+    EasyGLTFLoader('./assets/momiji_02/momiji.glb', scene, 1, 0, 0, 0);
+    EasyGLTFLoader('./assets/bench/bench.glb', scene, 1, 1, 0, 10);
+    EasyGLTFLoader('./assets/ityou/ityou.glb', scene, 1, 0, 0, 0);
+    EasyGLTFLoader('./assets/loghouse/loghouse.glb', scene, 1, 10, 0, -20);
+    EasyGLTFLoader('./assets/maki/maki.glb', scene, 1, 10, 0, 20);
 
     sun = new THREE.Vector3();
 
