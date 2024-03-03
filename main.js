@@ -74,6 +74,8 @@ import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+import { EXRLoader } from "three/addons/loaders/EXRLoader.js";
+
 let container, stats;
 let camera, scene, renderer;
 let controls, water, sun, mesh;
@@ -180,7 +182,7 @@ function init() {
 
     const sky = new Sky();
     sky.scale.setScalar(10000);
-    scene.add(sky);
+    // scene.add(sky);
 
     const skyUniforms = sky.material.uniforms;
 
@@ -208,13 +210,17 @@ function init() {
         sky.material.uniforms['sunPosition'].value.copy(sun);
         water.material.uniforms['sunDirection'].value.copy(sun).normalize();
 
-        scene.environment = pmremGenerator.fromScene(sky).texture;
+        // scene.environment = pmremGenerator.fromScene(sky).texture;
 
     }
 
     updateSun();
 
-    //
+
+    new EXRLoader().load("./assets/HDRI/sunflowers_puresky_1k.exr", (texture) => {
+        texture.mapping = THREE.EquirectanglarReflectionMapping;
+        scene.background = texture;
+    });
 
     controls = new OrbitControls(camera, renderer.domElement);
     controls.maxPolarAngle = Math.PI * 0.495;
