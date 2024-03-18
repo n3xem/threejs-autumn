@@ -64,11 +64,11 @@ function animate(camera, scene, renderer, trackball) {
 
 import * as THREE from 'three';
 
-import Stats from './node_modules/three/examples/jsm/libs/stats.module.js';
+import Stats from 'three/addons/libs/stats.module.js';
 
-import { OrbitControls } from './node_modules/three/examples/jsm/controls/OrbitControls.js';
-import { Water } from './node_modules/three/examples/jsm/objects/Water.js';
-import { Sky } from './node_modules/three/examples/jsm/objects/Sky.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { Water } from 'three/addons/objects/Water.js';
+import { Sky } from 'three/addons/objects/Sky.js';
 
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
