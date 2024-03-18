@@ -222,6 +222,9 @@ function init() {
         scene.background = texture;
     });
 
+    scene.fog = new THREE.Fog(0x000000, 1, 250);
+
+
     controls = new OrbitControls(camera, renderer.domElement);
     controls.maxPolarAngle = Math.PI * 0.495;
     controls.target.set(0, 10, 0);
