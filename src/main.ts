@@ -9,6 +9,7 @@ import { EXRLoader } from "three/addons/loaders/EXRLoader.js";
 import * as MyTHREE from './types/three.js';
 import { MTLAndOBJLoader, EasyGLTFLoader } from './loaders.js';
 import { HDRIPath, Model3dPath, TexturePath } from './config.js';
+import { Black, White, DarkGreen } from './colors.js';
 
 let stats: Stats;
 let container: HTMLElement | null;
@@ -46,8 +47,8 @@ function createWater() {
                 texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
             }),
             sunDirection: new THREE.Vector3(),
-            sunColor: 0xffffff,
-            waterColor: 0x001e0f,
+            sunColor: White,
+            waterColor: DarkGreen,
             distortionScale: 3.7,
             fog: scene.fog !== undefined
         }
@@ -80,19 +81,19 @@ function createSky() {
 }
 
 function createAmbientLight() {
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+    const ambientLight = new THREE.AmbientLight(White, 1);
     ambientLight.position.set(10, 10, 10);
     return ambientLight;
 }
 
 function createDiretionalLight() {
-    const light = new THREE.DirectionalLight(0xffffff, 1);
+    const light = new THREE.DirectionalLight(White, 1);
     light.position.set(20, 20, 20);
     return light;
 }
 
 function createPointLight() {
-    const light = new THREE.PointLight(0xffffff, 1);
+    const light = new THREE.PointLight(White, 1);
     light.position.set(10, 10, 10);
     return light;
 }
@@ -159,7 +160,7 @@ function init() {
         scene.background = texture;
     });
 
-    scene.fog = new THREE.Fog(0x000000, 1, 250);
+    scene.fog = new THREE.Fog(Black, 1, 250);
 
     controls = new OrbitControls(camera, renderer.domElement);
     controls.maxPolarAngle = Math.PI * 0.495;
