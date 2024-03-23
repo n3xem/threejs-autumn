@@ -17,11 +17,12 @@ export function MTLAndOBJLoader(mtlPath: MyTHREE.MtlPath, objPath: MyTHREE.ObjPa
     });
 }
 
-export function EasyGLTFLoader(path: string, scene: THREE.Scene, size: MyTHREE.Size, x: MyTHREE.X, y: MyTHREE.Y, z: MyTHREE.Z) {
+export function EasyGLTFLoader(path: string, scene: THREE.Scene, size: MyTHREE.Size, position: MyTHREE.Position, rotation: MyTHREE.Rotation) {
     const gltfLoader = new GLTFLoader();
     gltfLoader.load(path, function (gltf) {
         scene.add(gltf.scene);
         gltf.scene.scale.set(size, size, size);
-        gltf.scene.position.set(x, y, z);
+        gltf.scene.position.set( ...position );
+        gltf.scene.rotation.set( ...rotation );
     });
 }
