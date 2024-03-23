@@ -147,17 +147,39 @@ function init() {
     camera.add(pointLight);
     scene.add(camera);
 
-    MTLAndOBJLoader('./assets/maki_single_2.mtl', './assets/maki_single_2.obj');
+    type MtlPath = string;
+    type ObjPath = string;
 
-    MTLAndOBJLoader('./assets/landscape_ground/landscape_ground.mtl', './assets/landscape_ground/landscape_ground.obj');
-    MTLAndOBJLoader('./assets/landscape_water/landscape_water.mtl', './assets/landscape_water/landscape_water.obj');
+    type MtlAndObjFiles = [MtlPath, ObjPath];
+    const mtlAndObjFiles: MtlAndObjFiles[] = [
+        ['./assets/maki_single_2.mtl', './assets/maki_single_2.obj'],
+        ['./assets/landscape_ground/landscape_ground.mtl', './assets/landscape_ground/landscape_ground.obj'],
+        ['./assets/landscape_water/landscape_water.mtl', './assets/landscape_water/landscape_water.obj'],
+    ];
 
-    EasyGLTFLoader('./assets/momiji_01/momiji.glb', scene, 1, 0, 0, 0);
-    EasyGLTFLoader('./assets/momiji_02/momiji.glb', scene, 1, 0, 0, 0);
-    EasyGLTFLoader('./assets/bench/bench.glb', scene, 1, 1, 0, 10);
-    EasyGLTFLoader('./assets/ityou/ityou.glb', scene, 1, 0, 0, 0);
-    EasyGLTFLoader('./assets/loghouse/loghouse.glb', scene, 1, 10, 0, -20);
-    EasyGLTFLoader('./assets/maki/maki.glb', scene, 1, 10, 0, 20);
+    mtlAndObjFiles.forEach(([mtlPath, objPath]) => {
+        MTLAndOBJLoader(mtlPath, objPath);
+    });
+
+    type GlbPath = string;
+    type Size = number;
+    type X = number;
+    type Y = number;
+    type Z = number;
+
+    type GLTFFile = [GlbPath, Size, X, Y, Z];
+    const gltfFiles: GLTFFile[] = [
+        ['./assets/momiji_01/momiji.glb', 1, 0, 0, 0],
+        ['./assets/momiji_02/momiji.glb', 1, 0, 0, 0],
+        ['./assets/bench/bench.glb', 1, 1, 0, 10],
+        ['./assets/ityou/ityou.glb', 1, 0, 0, 0],
+        ['./assets/loghouse/loghouse.glb', 1, 10, 0, -20],
+        ['./assets/maki/maki.glb', 1, 10, 0, 20],
+    ];
+
+    gltfFiles.forEach(([path, size, x, y, z]) => {
+        EasyGLTFLoader(path, scene, size, x, y, z);
+    });
 
     water = createWater();
     scene.add(water);
