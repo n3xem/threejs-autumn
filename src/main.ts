@@ -4,13 +4,11 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Water } from 'three/addons/objects/Water.js';
 import { Sky } from 'three/addons/objects/Sky.js';
-import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
-import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { EXRLoader } from "three/addons/loaders/EXRLoader.js";
 
 import * as MyTHREE from './types/three.js';
 import { MTLAndOBJLoader, EasyGLTFLoader } from './loaders.js';
+import { HDRIPath, Model3dPath, TexturePath } from './config.js';
 
 let stats: Stats;
 let container: HTMLElement | null;
@@ -19,9 +17,6 @@ let scene: THREE.Scene;
 let renderer: THREE.WebGLRenderer;
 let water: Water;
 let controls: OrbitControls;
-
-const TexturePath = './assets/textures';
-const Model3dPath = './assets';
 
 init();
 animate();
@@ -159,7 +154,7 @@ function init() {
     };
     updateSun(sun, parameters, sky);
 
-    new EXRLoader().load("./assets/HDRI/sunflowers_puresky_1k.exr", (texture) => {
+    new EXRLoader().load(HDRIPath + "/sunflowers_puresky_1k.exr", (texture) => {
         texture.mapping = THREE.EquirectanglarReflectionMapping;
         scene.background = texture;
     });
