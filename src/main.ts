@@ -13,6 +13,11 @@ import { Black, White, DarkGreen } from './colors.js';
 import { TextGeometry } from 'three/examples/jsm/Addons.js';
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
 
+import { BokehPass } from 'three/addons/postprocessing/BokehPass.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+
 let stats: Stats;
 let container: HTMLElement | null;
 let camera: THREE.PerspectiveCamera;
@@ -20,6 +25,8 @@ let scene: THREE.Scene;
 let renderer: THREE.WebGLRenderer;
 let water: Water;
 let controls: OrbitControls;
+// ポストプロセシング用のdict(処理の度に型が追加される)
+let postprocessing = {};
 
 init();
 animate();
@@ -157,16 +164,17 @@ function init() {
     });
 
     const gltfFiles: MyTHREE.GLTFFile[] = [
-        [Model3dPath + '/momiji_01/momiji.glb', 1, 0, 0, 0],
-        [Model3dPath + '/momiji_02/momiji.glb', 1, 0, 0, 0],
-        [Model3dPath + '/bench/bench.glb', 1, 1, 0, 10],
-        [Model3dPath + '/ityou/ityou.glb', 1, 0, 0, 0],
-        [Model3dPath + '/loghouse/loghouse.glb', 1, 10, 0, -20],
-        [Model3dPath + '/maki/maki.glb', 1, 10, 0, 20],
+        [Model3dPath + '/momiji_01/momiji.glb', 1, [0, 0, 0], [0, 0, 0]],
+        [Model3dPath + '/momiji_02/momiji.glb', 1, [0, 0, 0], [0, 0, 0]],
+        [Model3dPath + '/bench/bench.glb', 1, [7, 0, 18], [0, 30, 0]],
+        [Model3dPath + '/ityou/ityou.glb', 1, [0, 0, 0], [0, 0, 0]],
+        [Model3dPath + '/loghouse/loghouse.glb', 0.815, [0, 2.5, -15], [0, 0, 0]],
+        [Model3dPath + '/maki/maki.glb', 0.8, [26, 0, 18], [0, 90, 0]],
+        // [Model3dPath + '/tree/tree.glb', 1.2, [28, 0, -20], [0, 25, 0]],
     ];
 
-    gltfFiles.forEach(([path, size, x, y, z]) => {
-        EasyGLTFLoader(path, scene, size, x, y, z);
+    gltfFiles.forEach(([path, size, position, rotation]) => {
+        EasyGLTFLoader(path, scene, size, position, rotation);
     });
 
     water = createWater();
@@ -201,7 +209,31 @@ function init() {
     stats = new Stats();
     container.appendChild(stats.dom);
 
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 2;
+    
+    initPostprocessing();
+
     window.addEventListener('resize', onWindowResize);
+}
+
+function initPostprocessing() {
+    const renderPass = new RenderPass(scene, camera);
+    const bokehPass = new BokehPass(scene, camera, {
+        focus: 67,
+        aperture: 50,
+        maxblur: 0.01
+    });
+    
+    const outputPass = new OutputPass();
+    const composer = new EffectComposer(renderer);
+    
+    composer.addPass(renderPass);
+    composer.addPass(bokehPass);
+    composer.addPass(outputPass);
+
+    postprocessing.composer = composer;
+    postprocessing.bokeh = bokehPass;
 }
 
 function onWindowResize() {
