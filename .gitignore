@@ -142,5 +142,12 @@ dist
 .svelte-kit
 
 # End of https://www.toptal.com/developers/gitignore/api/node
-assets
+assets/**/*.obj
+assets/**/*.mtl
+assets/**/*.glb
+assets/**/*.png
+assets/**/*.jpg
+assets/**/*.exr
+!/assets/textures
+!/assets/fonts
 .DS_Store

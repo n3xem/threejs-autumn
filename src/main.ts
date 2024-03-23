@@ -8,8 +8,10 @@ import { EXRLoader } from "three/addons/loaders/EXRLoader.js";
 
 import * as MyTHREE from './types/three.js';
 import { MTLAndOBJLoader, EasyGLTFLoader } from './loaders.js';
-import { HDRIPath, Model3dPath, TexturePath } from './config.js';
+import { HDRIPath, Model3dPath, TexturePath, FontPath } from './config.js';
 import { Black, White, DarkGreen } from './colors.js';
+import { TextGeometry } from 'three/examples/jsm/Addons.js';
+import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
 
 let stats: Stats;
 let container: HTMLElement | null;
@@ -98,6 +100,29 @@ function createPointLight() {
     return light;
 }
 
+async function create3DTimeText() {
+    const fontLoader = new FontLoader();
+    const font = await fontLoader.loadAsync(`${FontPath}/helvetiker_bold.typeface.json`);
+
+    const textMesh = new THREE.Mesh(
+        new TextGeometry('Sample Text', {
+            font: font,
+            size: 100,
+            height: 1,
+            curveSegments: 12,
+            bevelEnabled: true,
+            bevelThickness: 10,
+            bevelSize: 8,
+            bevelOffset: 0,
+            bevelSegments: 5
+        }),
+        new THREE.MeshBasicMaterial({ color: White })
+    );
+    textMesh.position.set(10, 10, 0);
+    textMesh.scale.set(0.1, 0.1, 0.1);
+    return textMesh;
+}
+
 function init() {
     container = document.getElementById('container');
     if (container === null) {
@@ -158,6 +183,10 @@ function init() {
     new EXRLoader().load(HDRIPath + "/sunflowers_puresky_1k.exr", (texture) => {
         texture.mapping = THREE.EquirectanglarReflectionMapping;
         scene.background = texture;
+    });
+
+    const text = create3DTimeText().then((text) => {
+        scene.add(text);
     });
 
     scene.fog = new THREE.Fog(Black, 1, 250);
