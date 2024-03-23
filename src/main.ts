@@ -76,14 +76,19 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import { EXRLoader } from "three/addons/loaders/EXRLoader.js";
 
-let container, stats;
-let camera, scene, renderer;
-let controls, water, sun, mesh;
+let stats: Stats;
+let container: HTMLElement | null;
+let camera: THREE.PerspectiveCamera;
+let scene: THREE.Scene;
+let renderer: THREE.WebGLRenderer;
+let water: Water;
+let sun: THREE.Vector3;
+let controls, mesh;
 
 init();
 animate();
 
-function MTLAndOBJLoader(mtlPath, objPath) {
+function MTLAndOBJLoader(mtlPath: string, objPath: string) {
     const mtlLoader = new MTLLoader();
     const objLoader = new OBJLoader();
 
@@ -96,7 +101,7 @@ function MTLAndOBJLoader(mtlPath, objPath) {
     });
 }
 
-function EasyGLTFLoader(path, scene, size, x, y, z) {
+function EasyGLTFLoader(path: string, scene: THREE.Scene, size: number, x: number, y: number, z: number) {
     const gltfLoader = new GLTFLoader();
     gltfLoader.load(path, function (gltf) {
         scene.add(gltf.scene);
@@ -109,8 +114,11 @@ function EasyGLTFLoader(path, scene, size, x, y, z) {
 function init() {
 
     container = document.getElementById('container');
-
-    //
+    // containerがnullの場合はエラーを出力して終了
+    if (container === null) {
+        console.error('container is null');
+        return;
+    }
 
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -138,10 +146,10 @@ function init() {
     camera.add(pointLight);
     scene.add(camera);
 
-    MTLAndOBJLoader('./assets/maki_single_2.mtl', './assets/maki_single_2.obj', scene);
+    MTLAndOBJLoader('./assets/maki_single_2.mtl', './assets/maki_single_2.obj');
 
-    MTLAndOBJLoader('./assets/landscape_ground/landscape_ground.mtl', './assets/landscape_ground/landscape_ground.obj', scene);
-    MTLAndOBJLoader('./assets/landscape_water/landscape_water.mtl', './assets/landscape_water/landscape_water.obj', scene);
+    MTLAndOBJLoader('./assets/landscape_ground/landscape_ground.mtl', './assets/landscape_ground/landscape_ground.obj');
+    MTLAndOBJLoader('./assets/landscape_water/landscape_water.mtl', './assets/landscape_water/landscape_water.obj');
 
     EasyGLTFLoader('./assets/momiji_01/momiji.glb', scene, 1, 0, 0, 0);
     EasyGLTFLoader('./assets/momiji_02/momiji.glb', scene, 1, 0, 0, 0);
