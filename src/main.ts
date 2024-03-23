@@ -1,67 +1,3 @@
-/*
-import * as THREE from 'three';
-import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
-import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
-
-let [camera, scene, renderer, trackball] = init();
-animate(camera, scene, renderer, trackball);
-
-function init() {
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.gammaOutput = true;
-    renderer.gammaFactor = 2.2;
-    document.body.appendChild(renderer.domElement);
-
-    var ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    ambientLight.position.set(0, 0, 0);
-    scene.add(ambientLight);
-
-    const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(0, 0, 0);
-    scene.add(light);
-
-    var pointLight = new THREE.PointLight(0xffffff, 1);
-    pointLight.position.set(0, 0, 0);
-    camera.add(pointLight);
-    scene.add(camera);
-
-    const objLoader = new OBJLoader();
-    const mtlLoader = new MTLLoader();
-
-    mtlLoader.load('./20231122_紅葉02.mtl', function (materials) {
-        materials.preload();
-        objLoader.setMaterials(materials);
-        objLoader.load('./20231122_紅葉02.obj', function (object) {
-            scene.add(object);
-        });
-    });
-
-    camera.position.set(2, 2, 2);
-    camera.lookAt(new THREE.Vector3(0, 0, 0));
-
-    const trackball = new TrackballControls(camera, renderer.domElement);
-    trackball.rotateSpeed = 5.0; //回転速度
-    trackball.zoomSpeed = 0.5;//ズーム速度
-    trackball.panSpeed = 2.0;//パン速度
-
-    return [camera, scene, renderer, trackball];
-}
-
-function animate(camera, scene, renderer, trackball) {
-    requestAnimationFrame(function () {
-        animate(camera, scene, renderer, trackball)
-    });
-    renderer.render(scene, camera);
-    trackball.update();
-}
-*/
-
-
 import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
@@ -83,7 +19,7 @@ let scene: THREE.Scene;
 let renderer: THREE.WebGLRenderer;
 let water: Water;
 let sun: THREE.Vector3;
-let controls, mesh;
+let controls;
 
 init();
 animate();
@@ -110,9 +46,7 @@ function EasyGLTFLoader(path: string, scene: THREE.Scene, size: number, x: numbe
     });
 }
 
-
 function init() {
-
     container = document.getElementById('container');
     // containerがnullの場合はエラーを出力して終了
     if (container === null) {
@@ -125,8 +59,6 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     container.appendChild(renderer.domElement);
-
-    //
 
     scene = new THREE.Scene();
 
@@ -163,7 +95,6 @@ function init() {
     // Water
 
     const waterGeometry = new THREE.PlaneGeometry(100, 50);
-
     water = new Water(
         waterGeometry,
         {
@@ -181,17 +112,12 @@ function init() {
             fog: scene.fog !== undefined
         }
     );
-
     water.rotation.x = - Math.PI / 2;
-
     scene.add(water);
 
     // Skybox
-
     const sky = new Sky();
     sky.scale.setScalar(10000);
-    // scene.add(sky);
-
     const skyUniforms = sky.material.uniforms;
 
     skyUniforms['turbidity'].value = 10;
@@ -204,10 +130,7 @@ function init() {
         azimuth: 0.205
     };
 
-    const pmremGenerator = new THREE.PMREMGenerator(renderer);
-
     function updateSun() {
-
         const theta = Math.PI * (parameters.inclination - 0.5);
         const phi = 2 * Math.PI * (parameters.azimuth - 0.5);
 
@@ -217,13 +140,8 @@ function init() {
 
         sky.material.uniforms['sunPosition'].value.copy(sun);
         water.material.uniforms['sunDirection'].value.copy(sun).normalize();
-
-        // scene.environment = pmremGenerator.fromScene(sky).texture;
-
     }
-
     updateSun();
-
 
     new EXRLoader().load("./assets/HDRI/sunflowers_puresky_1k.exr", (texture) => {
         texture.mapping = THREE.EquirectanglarReflectionMapping;
@@ -232,7 +150,6 @@ function init() {
 
     scene.fog = new THREE.Fog(0x000000, 1, 250);
 
-
     controls = new OrbitControls(camera, renderer.domElement);
     controls.maxPolarAngle = Math.PI * 0.495;
     controls.target.set(0, 10, 0);
@@ -240,39 +157,25 @@ function init() {
     controls.maxDistance = 200.0;
     controls.update();
 
-    //
-
     stats = new Stats();
     container.appendChild(stats.dom);
 
-
     window.addEventListener('resize', onWindowResize);
-
 }
 
 function onWindowResize() {
-
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-
     renderer.setSize(window.innerWidth, window.innerHeight);
-
 }
 
 function animate() {
-
     requestAnimationFrame(animate);
     render();
     stats.update();
-
 }
 
 function render() {
-
-    const time = performance.now() * 0.001;
-
     water.material.uniforms['time'].value += 0.4 / 60.0;
-
     renderer.render(scene, camera);
-
 }
