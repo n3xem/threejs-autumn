@@ -9,6 +9,8 @@ import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { EXRLoader } from "three/addons/loaders/EXRLoader.js";
 
+import * as MyTHREE from './types/three.js';
+
 let stats: Stats;
 let container: HTMLElement | null;
 let camera: THREE.PerspectiveCamera;
@@ -17,15 +19,10 @@ let renderer: THREE.WebGLRenderer;
 let water: Water;
 let controls: OrbitControls;
 
-type Parameters = {
-    inclination: number;
-    azimuth: number;
-};
-
 init();
 animate();
 
-function MTLAndOBJLoader(mtlPath: string, objPath: string) {
+function MTLAndOBJLoader(mtlPath: MyTHREE.MtlPath, objPath: MyTHREE.ObjPath) {
     const mtlLoader = new MTLLoader();
     const objLoader = new OBJLoader();
 
@@ -38,7 +35,7 @@ function MTLAndOBJLoader(mtlPath: string, objPath: string) {
     });
 }
 
-function EasyGLTFLoader(path: string, scene: THREE.Scene, size: number, x: number, y: number, z: number) {
+function EasyGLTFLoader(path: string, scene: THREE.Scene, size: MyTHREE.Size, x: MyTHREE.X, y: MyTHREE.Y, z: MyTHREE.Z) {
     const gltfLoader = new GLTFLoader();
     gltfLoader.load(path, function (gltf) {
         scene.add(gltf.scene);
@@ -81,7 +78,7 @@ function createWater() {
     water.rotation.x = - Math.PI / 2;
     return water;
 }
-function updateSun(sun: THREE.Vector3, parameters: Parameters, sky: Sky) {
+function updateSun(sun: THREE.Vector3, parameters: MyTHREE.SunParameters, sky: Sky) {
     const theta = Math.PI * (parameters.inclination - 0.5);
     const phi = 2 * Math.PI * (parameters.azimuth - 0.5);
 
@@ -146,11 +143,7 @@ function init() {
     camera.add(pointLight);
     scene.add(camera);
 
-    type MtlPath = string;
-    type ObjPath = string;
-
-    type MtlAndObjFiles = [MtlPath, ObjPath];
-    const mtlAndObjFiles: MtlAndObjFiles[] = [
+    const mtlAndObjFiles: MyTHREE.MtlAndObjFiles[] = [
         ['./assets/maki_single_2.mtl', './assets/maki_single_2.obj'],
         ['./assets/landscape_ground/landscape_ground.mtl', './assets/landscape_ground/landscape_ground.obj'],
         ['./assets/landscape_water/landscape_water.mtl', './assets/landscape_water/landscape_water.obj'],
@@ -160,14 +153,7 @@ function init() {
         MTLAndOBJLoader(mtlPath, objPath);
     });
 
-    type GlbPath = string;
-    type Size = number;
-    type X = number;
-    type Y = number;
-    type Z = number;
-
-    type GLTFFile = [GlbPath, Size, X, Y, Z];
-    const gltfFiles: GLTFFile[] = [
+    const gltfFiles: MyTHREE.GLTFFile[] = [
         ['./assets/momiji_01/momiji.glb', 1, 0, 0, 0],
         ['./assets/momiji_02/momiji.glb', 1, 0, 0, 0],
         ['./assets/bench/bench.glb', 1, 1, 0, 10],
