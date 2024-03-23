@@ -10,6 +10,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { EXRLoader } from "three/addons/loaders/EXRLoader.js";
 
 import * as MyTHREE from './types/three.js';
+import { MTLAndOBJLoader, EasyGLTFLoader } from './loaders.js';
 
 let stats: Stats;
 let container: HTMLElement | null;
@@ -24,28 +25,6 @@ const Model3dPath = './assets';
 
 init();
 animate();
-
-function MTLAndOBJLoader(mtlPath: MyTHREE.MtlPath, objPath: MyTHREE.ObjPath) {
-    const mtlLoader = new MTLLoader();
-    const objLoader = new OBJLoader();
-
-    mtlLoader.load(mtlPath, function (materials) {
-        materials.preload();
-        objLoader.setMaterials(materials);
-        objLoader.load(objPath, function (object) {
-            scene.add(object);
-        });
-    });
-}
-
-function EasyGLTFLoader(path: string, scene: THREE.Scene, size: MyTHREE.Size, x: MyTHREE.X, y: MyTHREE.Y, z: MyTHREE.Z) {
-    const gltfLoader = new GLTFLoader();
-    gltfLoader.load(path, function (gltf) {
-        scene.add(gltf.scene);
-        gltf.scene.scale.set(size, size, size);
-        gltf.scene.position.set(x, y, z);
-    });
-}
 
 function createRenderer() {
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -153,7 +132,7 @@ function init() {
     ];
 
     mtlAndObjFiles.forEach(([mtlPath, objPath]) => {
-        MTLAndOBJLoader(mtlPath, objPath);
+        MTLAndOBJLoader(mtlPath, objPath, scene);
     });
 
     const gltfFiles: MyTHREE.GLTFFile[] = [
