@@ -2,11 +2,10 @@
 
 ## setup
 ```
-npm install --save three
-npm install --save-dev vite
+npm i
 ```
 
 ## run
 ```
-npx vite
+npm run dev
 ```
