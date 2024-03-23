@@ -15,8 +15,7 @@ let camera: THREE.PerspectiveCamera;
 let scene: THREE.Scene;
 let renderer: THREE.WebGLRenderer;
 let water: Water;
-let sun: THREE.Vector3;
-let controls;
+let controls: OrbitControls;
 
 type Parameters = {
     inclination: number;
@@ -82,7 +81,7 @@ function createWater() {
     water.rotation.x = - Math.PI / 2;
     return water;
 }
-function updateSun(parameters: Parameters, sky: Sky) {
+function updateSun(sun: THREE.Vector3, parameters: Parameters, sky: Sky) {
     const theta = Math.PI * (parameters.inclination - 0.5);
     const phi = 2 * Math.PI * (parameters.azimuth - 0.5);
 
@@ -184,16 +183,13 @@ function init() {
     water = createWater();
     scene.add(water);
 
+    const sun = new THREE.Vector3();
     const sky = createSky();
-
     const parameters = {
         inclination: 0.49,
         azimuth: 0.205
     };
-
-    sun = new THREE.Vector3();
-
-    updateSun(parameters, sky);
+    updateSun(sun, parameters, sky);
 
     new EXRLoader().load("./assets/HDRI/sunflowers_puresky_1k.exr", (texture) => {
         texture.mapping = THREE.EquirectanglarReflectionMapping;
