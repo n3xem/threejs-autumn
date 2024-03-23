@@ -19,6 +19,9 @@ let renderer: THREE.WebGLRenderer;
 let water: Water;
 let controls: OrbitControls;
 
+const TexturePath = './assets/textures';
+const Model3dPath = './assets';
+
 init();
 animate();
 
@@ -65,7 +68,7 @@ function createWater() {
         {
             textureWidth: 512,
             textureHeight: 512,
-            waterNormals: new THREE.TextureLoader().load('./textures/waternormals.jpg', function (texture) {
+            waterNormals: new THREE.TextureLoader().load(TexturePath + '/waternormals.jpg', function (texture) {
                 texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
             }),
             sunDirection: new THREE.Vector3(),
@@ -144,9 +147,9 @@ function init() {
     scene.add(camera);
 
     const mtlAndObjFiles: MyTHREE.MtlAndObjFiles[] = [
-        ['./assets/maki_single_2.mtl', './assets/maki_single_2.obj'],
-        ['./assets/landscape_ground/landscape_ground.mtl', './assets/landscape_ground/landscape_ground.obj'],
-        ['./assets/landscape_water/landscape_water.mtl', './assets/landscape_water/landscape_water.obj'],
+        [Model3dPath + 'maki_single_2.mtl', Model3dPath + 'maki_single_2.obj'],
+        [Model3dPath + '/landscape_ground/landscape_ground.mtl', Model3dPath + '/landscape_ground/landscape_ground.obj'],
+        [Model3dPath + '/landscape_water/landscape_water.mtl', Model3dPath + '/landscape_water/landscape_water.obj'],
     ];
 
     mtlAndObjFiles.forEach(([mtlPath, objPath]) => {
@@ -154,12 +157,12 @@ function init() {
     });
 
     const gltfFiles: MyTHREE.GLTFFile[] = [
-        ['./assets/momiji_01/momiji.glb', 1, 0, 0, 0],
-        ['./assets/momiji_02/momiji.glb', 1, 0, 0, 0],
-        ['./assets/bench/bench.glb', 1, 1, 0, 10],
-        ['./assets/ityou/ityou.glb', 1, 0, 0, 0],
-        ['./assets/loghouse/loghouse.glb', 1, 10, 0, -20],
-        ['./assets/maki/maki.glb', 1, 10, 0, 20],
+        [Model3dPath + '/momiji_01/momiji.glb', 1, 0, 0, 0],
+        [Model3dPath + '/momiji_02/momiji.glb', 1, 0, 0, 0],
+        [Model3dPath + '/bench/bench.glb', 1, 1, 0, 10],
+        [Model3dPath + '/ityou/ityou.glb', 1, 0, 0, 0],
+        [Model3dPath + '/loghouse/loghouse.glb', 1, 10, 0, -20],
+        [Model3dPath + '/maki/maki.glb', 1, 10, 0, 20],
     ];
 
     gltfFiles.forEach(([path, size, x, y, z]) => {
