@@ -182,7 +182,7 @@ function init() {
 
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 2;
-    
+
     initPostprocessing();
 
     window.addEventListener('resize', onWindowResize);
@@ -195,10 +195,10 @@ function initPostprocessing() {
         aperture: 50,
         maxblur: 0.01
     });
-    
+
     const outputPass = new OutputPass();
     const composer = new EffectComposer(renderer);
-    
+
     composer.addPass(renderPass);
     composer.addPass(bokehPass);
     composer.addPass(outputPass);
@@ -222,4 +222,5 @@ function animate() {
 function render() {
     water.material.uniforms['time'].value += 0.4 / 60.0;
     renderer.render(scene, camera);
+    postprocessing.composer.render();
 }
