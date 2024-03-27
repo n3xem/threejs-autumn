@@ -22,7 +22,7 @@ export function EasyGLTFLoader(path: string, scene: THREE.Scene, size: MyTHREE.S
     gltfLoader.load(path, function (gltf) {
         scene.add(gltf.scene);
         gltf.scene.scale.set(size, size, size);
-        gltf.scene.position.set( ...position );
-        gltf.scene.rotation.set( ...rotation );
+        gltf.scene.position.fromArray( position );
+        gltf.scene.rotation.fromArray( rotation.map((x) => {return x * (Math.PI / 180)}) );
     });
 }
