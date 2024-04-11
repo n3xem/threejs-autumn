@@ -142,14 +142,14 @@ async function init() {
         [Model3dPath + '/maki/maki.glb', 0.8, [26, 0, 18], [0, 90, 0]],
         [Model3dPath + '/tree/tree.glb', 1.2, [28, 0, -20], [0, 25, 0]],
         [Model3dPath + '/landscape_ground/landscape_ground.glb', 1, [0, 0, 0], [0, 0, 0]],
-        [Model3dPath + '/landscape_water/landscape_water.glb', 1, [0, 0, 0], [0, 0, 0]],
+        // [Model3dPath + '/landscape_water/landscape_water.glb', 1, [0, 0, 0], [0, 0, 0]],
     ];
     gltfFiles.forEach(([path, size, position, rotation]) => {
         EasyGLTFLoader(path, scene, size, position, rotation);
     });
 
     const path = Model3dPath + '/landscape_water/landscape_water.glb';
-    const waterObject = await modelLoader(path);
+    const waterObject = await modelLoader(path, scene);
 
 
     // water = createWater();
