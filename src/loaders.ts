@@ -1,8 +1,9 @@
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { GLTF, GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as THREE from 'three';
 import * as MyTHREE from './types/three.js';
+import { Model3dPath } from './config.js';
 
 export function MTLAndOBJLoader(mtlPath: MyTHREE.MtlPath, objPath: MyTHREE.ObjPath, scene: THREE.Scene) {
     const mtlLoader = new MTLLoader();
@@ -25,4 +26,45 @@ export function EasyGLTFLoader(path: string, scene: THREE.Scene, size: MyTHREE.S
         gltf.scene.position.fromArray( position );
         gltf.scene.rotation.fromArray( rotation.map((x) => {return x * (Math.PI / 180)}) );
     });
+}
+
+export async function ModelLoader() {
+    const loader = new GLTFLoader();
+    const [
+        landscapeGroundModel, landscapeWaterModel, benchModel, firewoodModel, loghouseModel, treeBranchModel, treeLeavesModel
+    ] = await Promise.all([
+        loader.loadAsync(Model3dPath + '/landscape_ground/landscape_ground.glb'),
+        loader.loadAsync(Model3dPath + '/landscape_water/landscape_water.glb'),
+        loader.loadAsync(Model3dPath + '/bench/bench.glb'),
+        loader.loadAsync(Model3dPath + '/maki/maki.glb'),
+        loader.loadAsync(Model3dPath + '/loghouse/loghouse.glb'),
+        loader.loadAsync(Model3dPath + '/tree/tree_branch.glb'),
+        loader.loadAsync(Model3dPath + '/tree/tree_leaves_autumn.glb')
+    ]);
+
+    const landscapeGround = setupModel(landscapeGroundModel, 1, [0, 0, 0], [0, 0, 0]);
+    const landscapeWater = setupModel(landscapeWaterModel, 1, [0, 0, 0], [0, 0, 0]);
+    const bench = setupModel(benchModel, 1, [7, 0, 18], [0, 30, 0]);
+    const firewood = setupModel(firewoodModel, 0.8, [26, 0, 18], [0, 90, 0]);
+    const loghouse = setupModel(loghouseModel, 0.815, [0, 2.5, -15], [0, 0, 0]);
+    const treeBranch = setupModel(treeBranchModel, 1.2, [28, 0, -20], [0, 25, 0]);
+    const treeLeaves = setupModel(treeLeavesModel, 1.0, [28, 0, -20], [0, 25, 0]);
+
+    return {
+        landscapeGround,
+        landscapeWater,
+        bench,
+        firewood,
+        loghouse,
+        treeBranch,
+        treeLeaves
+    }
+}
+
+function setupModel(data: GLTF, size: MyTHREE.Size, position: MyTHREE.Position, rotation: MyTHREE.Rotation) {
+    const model = data.scene;
+    model.scale.set(size, size, size);
+    model.position.fromArray(position);
+    model.rotation.fromArray(rotation.map((x) => x * (Math.PI / 180)));
+    return model;
 }
