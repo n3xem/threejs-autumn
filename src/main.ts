@@ -2,29 +2,25 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { Water } from 'three/addons/objects/Water.js';
-import { Sky } from 'three/addons/objects/Sky.js';
 import { EXRLoader } from "three/addons/loaders/EXRLoader.js";
 
 import * as MyTHREE from './types/three.js';
-import { MTLAndOBJLoader, EasyGLTFLoader } from './loaders.js';
+import { MTLAndOBJLoader, EasyGLTFLoader, ModelLoader } from './loaders.js';
 import { HDRIPath, Model3dPath, TexturePath } from './config.js';
 import { Black, White, DarkGreen } from './colors.js';
-import { loadModels } from './loadModel.js';
-import { modelLoader } from './loadWater.js';
-
 
 import { BokehPass } from 'three/addons/postprocessing/BokehPass.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 
+import { loadLeaves, getVerticalPositions, compositionTree } from './compositionTree.js';
+
 let stats: Stats;
 let container: HTMLElement | null;
 let camera: THREE.PerspectiveCamera;
 let scene: THREE.Scene;
 let renderer: THREE.WebGLRenderer;
-let water: Water;
 let controls: OrbitControls;
 let postprocessing: { [name: string]: any } = {};
 
@@ -46,68 +42,6 @@ function createCamera() {
     return camera;
 }
 
-function createWater() {
-    const waterGeometry = new THREE.PlaneGeometry(100, 50);
-    water = new Water(
-        waterGeometry,
-        {
-            textureWidth: 512,
-            textureHeight: 512,
-            waterNormals: new THREE.TextureLoader().load(TexturePath + '/waternormals.jpg', function (texture) {
-                texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-            }),
-            sunDirection: new THREE.Vector3(),
-            sunColor: White,
-            waterColor: DarkGreen,
-            distortionScale: 3.7,
-            fog: scene.fog !== undefined
-        }
-    );
-    water.rotation.x = - Math.PI / 2;
-    return water;
-}
-function updateSun(sun: THREE.Vector3, parameters: MyTHREE.SunParameters, sky: Sky) {
-    const theta = Math.PI * (parameters.inclination - 0.5);
-    const phi = 2 * Math.PI * (parameters.azimuth - 0.5);
-
-    sun.x = Math.cos(phi);
-    sun.y = Math.sin(phi) * Math.sin(theta);
-    sun.z = Math.sin(phi) * Math.cos(theta);
-
-    sky.material.uniforms['sunPosition'].value.copy(sun);
-    water.material.uniforms['sunDirection'].value.copy(sun).normalize();
-}
-
-function createSky() {
-    const sky = new Sky();
-    sky.scale.setScalar(10000);
-    const skyUniforms = sky.material.uniforms;
-
-    skyUniforms['turbidity'].value = 10;
-    skyUniforms['rayleigh'].value = 2;
-    skyUniforms['mieCoefficient'].value = 0.005;
-    skyUniforms['mieDirectionalG'].value = 0.8;
-    return sky;
-}
-
-function createAmbientLight() {
-    const ambientLight = new THREE.AmbientLight(White, 1);
-    ambientLight.position.set(10, 10, 10);
-    return ambientLight;
-}
-
-function createDiretionalLight() {
-    const light = new THREE.DirectionalLight(White, 1);
-    light.position.set(20, 20, 20);
-    return light;
-}
-
-function createPointLight() {
-    const light = new THREE.PointLight(White, 1);
-    light.position.set(10, 10, 10);
-    return light;
-}
-
 async function init() {
     container = document.getElementById('container');
     if (container === null) {
@@ -123,45 +57,20 @@ async function init() {
     camera.position.set(-42.294607851113554, 28.908477520375804, 44.98071058934696);
     camera.rotation.set(-0.7162648788326684, -0.6121050730297184, -0.4637845039498096);
 
-    // const mtlAndObjFiles: MyTHREE.MtlAndObjFiles[] = [
-    //     [Model3dPath + 'maki_single_2.mtl', Model3dPath + 'maki_single_2.obj'],
-    //     [Model3dPath + '/landscape_ground/landscape_ground.mtl', Model3dPath + '/landscape_ground/landscape_ground.obj'],
-    //     [Model3dPath + '/landscape_water/landscape_water.mtl', Model3dPath + '/landscape_water/landscape_water.obj'],
-    // ];
+    const {
+        landscapeGround,
+        landscapeWater,
+        bench,
+        firewood,
+        loghouse,
+        treeBranch,
+        treeLeaves
+    } = await ModelLoader();
 
-    // mtlAndObjFiles.forEach(([mtlPath, objPath]) => {
-    //     MTLAndOBJLoader(mtlPath, objPath, scene);
-    // });
+    // const verticalPointsArray = await getVerticalPositions(Model3dPath + '/tree/tree_leaves_positions.txt');
+    // const tree = compositionTree(treeBranch, treeLeaves, verticalPointsArray);
 
-    const gltfFiles: MyTHREE.GLTFFile[] = [
-        // [Model3dPath + '/momiji_01/momiji.glb', 1, [0, 0, 0], [0, 0, 0]],
-        // [Model3dPath + '/momiji_02/momiji.glb', 1, [0, 0, 0], [0, 0, 0]],
-        [Model3dPath + '/bench/bench.glb', 1, [7, 0, 18], [0, 30, 0]],
-        // [Model3dPath + '/ityou/ityou.glb', 1, [0, 0, 0], [0, 0, 0]],
-        [Model3dPath + '/loghouse/loghouse.glb', 0.815, [0, 2.5, -15], [0, 0, 0]],
-        [Model3dPath + '/maki/maki.glb', 0.8, [26, 0, 18], [0, 90, 0]],
-        [Model3dPath + '/tree/tree.glb', 1.2, [28, 0, -20], [0, 25, 0]],
-        [Model3dPath + '/landscape_ground/landscape_ground.glb', 1, [0, 0, 0], [0, 0, 0]],
-        // [Model3dPath + '/landscape_water/landscape_water.glb', 1, [0, 0, 0], [0, 0, 0]],
-    ];
-    gltfFiles.forEach(([path, size, position, rotation]) => {
-        EasyGLTFLoader(path, scene, size, position, rotation);
-    });
-
-    const path = Model3dPath + '/landscape_water/landscape_water.glb';
-    const waterObject = await modelLoader(path, scene);
-
-
-    // water = createWater();
-    // scene.add(water);
-
-    // const sun = new THREE.Vector3();
-    // const sky = createSky();
-    // const parameters = {
-    //     inclination: 0.49,
-    //     azimuth: 0.205
-    // };
-    // updateSun(sun, parameters, sky);
+    scene.add(landscapeGround, landscapeWater, bench, firewood, loghouse);
 
     new EXRLoader().load(HDRIPath + "/sunflowers_puresky_1k.exr", (texture) => {
         texture.mapping = THREE.EquirectangularReflectionMapping;
