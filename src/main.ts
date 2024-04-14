@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { uniform, storage, texture, instanceIndex, SpriteNodeMaterial } from 'three/nodes'
 
 import Stats from 'three/addons/libs/stats.module.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -15,6 +16,7 @@ import { BokehPass } from 'three/addons/postprocessing/BokehPass.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import StorageInstancedBufferAttribute from 'three/addons/renderers/common/StorageInstancedBufferAttribute.js';
 
 let stats: Stats;
 let container: HTMLElement | null;
@@ -170,6 +172,35 @@ function init() {
 
     scene.fog = new THREE.Fog(Black, 1, 250);
 
+    const particleCount = 1000000;
+    const size = uniform(.12);
+
+    const textureLoader = new THREE.TextureLoader();
+    const map = textureLoader.load('assets/textures/sprite1.png');
+
+    const createBuffer = () => storage(new StorageInstancedBufferAttribute(particleCount, 3), 'vec3', particleCount);
+
+    const colorBuffer = createBuffer();
+    const positionBuffer = createBuffer();
+
+    // create nodes
+
+    const textureNode = texture(map);
+
+    const particleMaterial = new SpriteNodeMaterial();
+    particleMaterial.colorNode = textureNode.mul(colorBuffer.element(instanceIndex));
+    particleMaterial.positionNode = positionBuffer.toAttribute();
+    particleMaterial.scaleNode = size;
+    particleMaterial.depthWrite = false;
+    particleMaterial.depthTest = true;
+    particleMaterial.transparent = true;
+
+    const particles = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), particleMaterial);
+    particles.isInstancedMesh = true;
+    particles.count = particleCount;
+    particles.frustumCulled = false;
+    scene.add(particles);
+
     controls = new OrbitControls(camera, renderer.domElement);
     controls.maxPolarAngle = Math.PI * 0.495;
     controls.target.set(0, 10, 0);
@@ -222,5 +253,5 @@ function animate() {
 function render() {
     water.material.uniforms['time'].value += 0.4 / 60.0;
     renderer.render(scene, camera);
-    postprocessing.composer.render();
+    // postprocessing.composer.render();
 }
