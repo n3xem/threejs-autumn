@@ -129,5 +129,5 @@ function animate() {
 function render() {
     // water.material.uniforms['time'].value += 0.4 / 60.0;
     renderer.render(scene, camera);
-    postprocessing.composer.render(0.1);
+    postprocessing.composer.render();
 }
