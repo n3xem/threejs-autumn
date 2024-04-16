@@ -88,6 +88,9 @@ async function init() {
     stats = new Stats();
     container.appendChild(stats.dom);
 
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 2;
+
     initPostprocessing();
     renderer.autoClear = false;
 
