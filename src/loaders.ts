@@ -44,7 +44,7 @@ export async function ModelLoader() {
         loader.loadAsync(Model3dPath + '/bench/benchDraco.glb'),
         loader.loadAsync(Model3dPath + '/maki/makiDraco.glb'),
         loader.loadAsync(Model3dPath + '/loghouse/loghouseDraco.glb'),
-        loader.loadAsync(Model3dPath + '/tree/tree_autumnDraco.glb'),
+        loader.loadAsync(Model3dPath + '/tree/tree_springDraco.glb'),
     ]);
 
     const landscapeGround = setupModel(landscapeGroundModel, 1, [0, 0, 0], [0, 0, 0]);

@@ -84,8 +84,8 @@ async function init() {
     controls.maxDistance = 200.0;
     controls.update();
 
-    stats = new Stats();
-    container.appendChild(stats.dom);
+    // stats = new Stats();
+    // container.appendChild(stats.dom);
 
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 2;
@@ -125,7 +125,7 @@ function onWindowResize() {
 function animate() {
     requestAnimationFrame(animate);
     render();
-    stats.update();
+    // stats.update();
 }
 
 function render() {
