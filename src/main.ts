@@ -63,14 +63,13 @@ async function init() {
         bench,
         firewood,
         loghouse,
-        treeBranch,
-        treeLeaves
+        tree
     } = await ModelLoader();
 
     // const verticalPointsArray = await getVerticalPositions(Model3dPath + '/tree/tree_leaves_positions.txt');
     // const tree = compositionTree(treeBranch, treeLeaves, verticalPointsArray);
 
-    scene.add(landscapeGround, landscapeWater, bench, firewood, loghouse);
+    scene.add(landscapeGround, landscapeWater, bench, firewood, loghouse, tree);
 
     new EXRLoader().load(HDRIPath + "/sunflowers_puresky_1k.exr", (texture) => {
         texture.mapping = THREE.EquirectangularReflectionMapping;
@@ -130,7 +129,6 @@ function animate() {
 }
 
 function render() {
-    // water.material.uniforms['time'].value += 0.4 / 60.0;
     renderer.render(scene, camera);
     postprocessing.composer.render();
 }
