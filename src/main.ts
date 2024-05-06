@@ -104,10 +104,10 @@ function initPostprocessing() {
         maxblur: 0.013,
         aspect: 0.5,
     });
-    
+
     const outputPass = new OutputPass();
     const composer = new EffectComposer(renderer);
-    
+
     composer.addPass(renderPass);
     composer.addPass(bokehPass);
     composer.addPass(outputPass);
