@@ -147,3 +147,7 @@ assets
 
 # Exclude folders
 draco/
+
+# Netlify
+.netlify/
+
