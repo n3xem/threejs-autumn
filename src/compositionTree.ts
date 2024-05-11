@@ -1,9 +1,6 @@
 import { Vector3 } from 'three';
-import { BufferGeometryUtils, ThreeMFLoader } from 'three/addons/Addons.js';
-import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
-import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-import { GLTF, GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { BufferGeometry, Loader, Object3D } from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { BufferGeometry, Object3D } from 'three';
 import * as THREE from 'three';
 
 async function loadLeaves(path: string) {
@@ -18,7 +15,7 @@ async function loadLeaves(path: string) {
     });
 };
 
-function getVerticalPositions (path: string) {
+function getVerticalPositions(path: string) {
     const positionArray = fetch(path)
         .then(response => response.text())
         .then((data) => {
@@ -37,7 +34,7 @@ function getVerticalPositions (path: string) {
 
 function compositionTree(baseModel: Object3D, decorateModel: Object3D, verticalPositions: Vector3[]) {
     let geoms = [];
-    for(let i = 0; i < verticalPositions.length; i++) {
+    for (let i = 0; i < verticalPositions.length; i++) {
         const geom = decorateModel.clone();
         const randomScale = Math.random();
         geom.position.set(

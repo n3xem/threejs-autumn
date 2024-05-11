@@ -1,22 +1,16 @@
 import * as THREE from 'three';
 
-import Stats from 'three/addons/libs/stats.module.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { EXRLoader } from "three/addons/loaders/EXRLoader.js";
 
-import * as MyTHREE from './types/three.js';
-import { MTLAndOBJLoader, EasyGLTFLoader, ModelLoader } from './loaders.js';
-import { HDRIPath, Model3dPath, TexturePath } from './config.js';
-import { Black, White, DarkGreen } from './colors.js';
+import { ModelLoader } from './loaders.js';
+import { HDRIPath } from './config.js';
 
 import { BokehPass } from 'three/addons/postprocessing/BokehPass.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 
-import { loadLeaves, getVerticalPositions, compositionTree } from './compositionTree.js';
-
-let stats: Stats;
 let container: HTMLElement | null;
 let camera: THREE.PerspectiveCamera;
 let scene: THREE.Scene;
