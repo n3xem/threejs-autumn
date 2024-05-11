@@ -24,8 +24,10 @@ export function EasyGLTFLoader(path: string, scene: THREE.Scene, size: MyTHREE.S
     gltfLoader.load(path, function (gltf) {
         scene.add(gltf.scene);
         gltf.scene.scale.set(size, size, size);
-        gltf.scene.position.fromArray( position );
-        gltf.scene.rotation.fromArray( rotation.map((x) => {return x * (Math.PI / 180)}) );
+        gltf.scene.position.fromArray(position);
+
+        const rotationPi = rotation.map((x) => { return x * (Math.PI / 180) })
+        gltf.scene.rotation.fromArray([rotationPi[0], rotationPi[1], rotationPi[2]]);
     });
 }
 
@@ -68,6 +70,8 @@ function setupModel(data: GLTF, size: MyTHREE.Size, position: MyTHREE.Position, 
     const model = data.scene;
     model.scale.set(size, size, size);
     model.position.fromArray(position);
-    model.rotation.fromArray(rotation.map((x) => x * (Math.PI / 180)));
+
+    const rotationPi = rotation.map((x) => { return x * (Math.PI / 180) });
+    model.rotation.fromArray([rotationPi[0], rotationPi[1], rotationPi[2]]);
     return model;
 }

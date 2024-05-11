@@ -16,7 +16,10 @@ let camera: THREE.PerspectiveCamera;
 let scene: THREE.Scene;
 let renderer: THREE.WebGLRenderer;
 let controls: OrbitControls;
-let postprocessing: { [name: string]: any } = {};
+let postprocessing: {
+    composer: EffectComposer,
+    bokeh: BokehPass
+};
 
 await init();
 animate();
