@@ -19,6 +19,9 @@ let controls: OrbitControls;
 let postprocessing: {
     composer: EffectComposer,
     bokeh: BokehPass
+} = {
+    composer: new EffectComposer(new THREE.WebGLRenderer()),
+    bokeh: new BokehPass(new THREE.Scene(), new THREE.Camera(), {})
 };
 
 await init();
