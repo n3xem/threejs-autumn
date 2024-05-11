@@ -5,7 +5,9 @@ import { EXRLoader } from "three/addons/loaders/EXRLoader.js";
 
 import { ModelLoader } from './loaders.js';
 import { HDRIPath } from './config.js';
+import { create3DTimeTextMesh } from './mesh.js';
 
+import { TextGeometry } from 'three/examples/jsm/Addons.js';
 import { BokehPass } from 'three/addons/postprocessing/BokehPass.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
@@ -23,6 +25,8 @@ let postprocessing: {
     composer: new EffectComposer(new THREE.WebGLRenderer()),
     bokeh: new BokehPass(new THREE.Scene(), new THREE.Camera(), {})
 };
+let nowMinutes = getNowMinutes();
+let textMesh: THREE.Mesh<TextGeometry, THREE.MeshBasicMaterial, THREE.Object3DEventMap>;
 
 await init();
 animate();
@@ -40,6 +44,20 @@ function createCamera() {
     const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 3000);
     camera.position.set(0, 0, 250);
     return camera;
+}
+
+function getNowMinutes() {
+    const now = new Date();
+    return now.getMinutes() + now.getHours() * 60;
+}
+
+function generateTimeText() {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const minutesFormatted = minutes < 10 ? '0' + minutes : minutes.toString();
+    const timeString = hours + ':' + minutesFormatted;
+    return timeString;
 }
 
 async function init() {
@@ -70,6 +88,11 @@ async function init() {
     // const tree = compositionTree(treeBranch, treeLeaves, verticalPointsArray);
 
     scene.add(landscapeGround, landscapeWater, bench, firewood, loghouse);
+
+    create3DTimeTextMesh(generateTimeText()).then((text) => {
+        textMesh = text;
+        scene.add(text);
+    });
 
     new EXRLoader().load(HDRIPath + "/sunflowers_puresky_1k.exr", (texture) => {
         texture.mapping = THREE.EquirectangularReflectionMapping;
@@ -122,7 +145,19 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+function updateTextMeshIfMinuteChanged() {
+    if (nowMinutes !== getNowMinutes()) {
+        nowMinutes = getNowMinutes();
+        scene.remove(textMesh);
+        create3DTimeTextMesh(generateTimeText()).then((text) => {
+            textMesh = text;
+            scene.add(text);
+        });
+    }
+}
+
 function animate() {
+    updateTextMeshIfMinuteChanged();
     requestAnimationFrame(animate);
     render();
     // stats.update();

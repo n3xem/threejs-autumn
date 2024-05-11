@@ -142,7 +142,6 @@ dist
 .svelte-kit
 
 # End of https://www.toptal.com/developers/gitignore/api/node
-assets
 .DS_Store
 
 # Exclude folders
@@ -151,3 +150,6 @@ draco/
 # Netlify
 .netlify/
 
+# assets
+assets/*
+!fonts
