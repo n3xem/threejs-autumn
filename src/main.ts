@@ -63,13 +63,13 @@ async function init() {
         bench,
         firewood,
         loghouse,
-        tree
+        // tree
     } = await ModelLoader();
 
     // const verticalPointsArray = await getVerticalPositions(Model3dPath + '/tree/tree_leaves_positions.txt');
     // const tree = compositionTree(treeBranch, treeLeaves, verticalPointsArray);
 
-    scene.add(landscapeGround, landscapeWater, bench, firewood, loghouse, tree);
+    scene.add(landscapeGround, landscapeWater, bench, firewood, loghouse);
 
     new EXRLoader().load(HDRIPath + "/sunflowers_puresky_1k.exr", (texture) => {
         texture.mapping = THREE.EquirectangularReflectionMapping;
