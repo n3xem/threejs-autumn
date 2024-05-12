@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 
+import { GUI } from 'lil-gui';
+
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { EXRLoader } from "three/addons/loaders/EXRLoader.js";
 
@@ -27,6 +29,13 @@ let postprocessing: {
 };
 let nowMinutes = getNowMinutes();
 let textMesh: THREE.Mesh<TextGeometry, THREE.MeshBasicMaterial, THREE.Object3DEventMap>;
+
+let bokehPassParams = {
+    focus: 64,
+    aperture: 50 * 0.00001,
+    maxblur: 0.013,
+    aspect: 0.5,
+}
 
 await init();
 animate();
@@ -60,7 +69,21 @@ function generateTimeText() {
     return timeString;
 }
 
+function setControl() {
+    const gui = new GUI();
+
+    const bokehPassParamsFolder = gui.addFolder('BokehPassParams');
+    bokehPassParamsFolder.add(bokehPassParams, 'focus', 0, 100);
+    bokehPassParamsFolder.add(bokehPassParams, 'aperture', 0, 0.0001);
+    bokehPassParamsFolder.add(bokehPassParams, 'maxblur', 0, 0.02);
+    bokehPassParamsFolder.add(bokehPassParams, 'aspect', 0, 1);
+    bokehPassParamsFolder.open();
+
+    gui.close();
+}
+
 async function init() {
+    setControl();
     container = document.getElementById('container');
     if (container === null) {
         console.error('container is null');
@@ -121,12 +144,7 @@ async function init() {
 
 function initPostprocessing() {
     const renderPass = new RenderPass(scene, camera);
-    const bokehPass = new BokehPass(scene, camera, {
-        focus: 64,
-        aperture: 50 * 0.00001,
-        maxblur: 0.013,
-        aspect: 0.5,
-    });
+    const bokehPass = new BokehPass(scene, camera, bokehPassParams);
 
     const outputPass = new OutputPass();
     const composer = new EffectComposer(renderer);
