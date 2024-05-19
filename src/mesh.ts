@@ -26,7 +26,7 @@ export async function create3DTimeTextMesh(text: string) {
         }),
         new THREE.MeshBasicMaterial({ color: White })
     );
-    textMesh.position.set(10, 10, 0);
+    textMesh.position.set(-18, 2, 5);
     textMesh.scale.set(0.1, 0.1, 0.1);
     return textMesh;
 }

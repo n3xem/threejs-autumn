@@ -72,7 +72,7 @@ async function init() {
     container.appendChild(renderer.domElement);
 
     camera = createCamera();
-    camera.position.set(-42.294607851113554, 28.908477520375804, 44.98071058934696);
+    camera.position.set(-12.294607851113554, 28.908477520375804, 90.98071058934696);
     camera.rotation.set(-0.7162648788326684, -0.6121050730297184, -0.4637845039498096);
 
     const {
