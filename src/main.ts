@@ -28,6 +28,8 @@ let postprocessing: {
 let nowMinutes = getNowMinutes();
 let textMesh: THREE.Mesh<TextGeometry, THREE.MeshBasicMaterial, THREE.Object3DEventMap>;
 
+let rot = 0;
+
 await init();
 animate();
 
@@ -72,8 +74,9 @@ async function init() {
     container.appendChild(renderer.domElement);
 
     camera = createCamera();
-    camera.position.set(-12.294607851113554, 28.908477520375804, 90.98071058934696);
+    camera.position.set(-12.294607851113554, 28.908477520375804, 60.98071058934696);
     camera.rotation.set(-0.7162648788326684, -0.6121050730297184, -0.4637845039498096);
+    camera.lookAt(0, 0, 0);
 
     const {
         landscapeGround,
@@ -156,7 +159,16 @@ function updateTextMeshIfMinuteChanged() {
     }
 }
 
+function rotateCamera() {
+    rot -= 0.1;
+    const radian = rot * Math.PI / 180;
+    camera.position.x = 70 * Math.sin(radian);
+    camera.position.z = 70 * Math.cos(radian);
+    camera.lookAt(0, 0, 0);
+}
+
 function animate() {
+    rotateCamera();
     updateTextMeshIfMinuteChanged();
     requestAnimationFrame(animate);
     render();
