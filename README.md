@@ -10,3 +10,7 @@ npm i
 ```
 npm run dev
 ```
+
+## Acknowledgements
+このプロジェクトの実現に助けられたパッケージ・ライブラリの開発者の方々に感謝します。
+* [Three.js](https://threejs.org/)
