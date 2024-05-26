@@ -14,3 +14,5 @@ npm run dev
 ## Acknowledgements
 このプロジェクトの実現に助けられたパッケージ・ライブラリの開発者の方々に感謝します。
 * [Three.js](https://threejs.org/)
+* [TypeScript](https://www.typescriptlang.org/)
+* [Vite](https://vitejs.dev/)
