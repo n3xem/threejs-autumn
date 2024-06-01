@@ -153,3 +153,5 @@ draco/
 # assets
 assets/*
 !fonts
+!HDRI
+!models
