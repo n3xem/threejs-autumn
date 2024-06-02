@@ -3,7 +3,7 @@ import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
 import { TextGeometry } from 'three/examples/jsm/Addons.js';
 import { White } from './colors.js';
 
-import HelvetikerBold from '../assets/fonts/helvetiker_bold.typeface.json';
+import HelvetikerBold from '../assets/fonts/helvetiker_bold.typeface.json?url';
 
 export async function create3DTimeTextMesh(text: string) {
     const fontLoader = new FontLoader();
