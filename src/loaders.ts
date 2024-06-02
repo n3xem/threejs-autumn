@@ -38,7 +38,7 @@ export function EasyGLTFLoader(path: string, scene: THREE.Scene, size: MyTHREE.S
 
 export async function ModelLoader() {
     const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('/draco/');
+    dracoLoader.setDecoderPath('/src/draco/');
     dracoLoader.setDecoderConfig({ type: 'js' });
     const loader = new GLTFLoader();
     loader.setDRACOLoader(dracoLoader);
