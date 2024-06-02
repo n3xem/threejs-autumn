@@ -144,12 +144,6 @@ dist
 # End of https://www.toptal.com/developers/gitignore/api/node
 .DS_Store
 
-# Draco
-draco/draco_decoder.wasm
-draco/draco_encoder.js
-draco/draco_wasm_wrapper.js
-draco/gltf
-
 # Netlify
 .netlify/
 
