@@ -13,5 +13,6 @@ export default defineConfig({
     assetsInclude: [
         '**/*.glb',
         '**/*.exr',
+        '**/*.json',
     ],
 });

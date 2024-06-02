@@ -1,16 +1,13 @@
 import * as THREE from 'three';
-
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
 import { TextGeometry } from 'three/examples/jsm/Addons.js';
-
-import { FontPath } from './config.js';
 import { White } from './colors.js';
 
-
+import HelvetikerBold from '../assets/fonts/helvetiker_bold.typeface.json';
 
 export async function create3DTimeTextMesh(text: string) {
     const fontLoader = new FontLoader();
-    const font = await fontLoader.loadAsync(`${FontPath}/helvetiker_bold.typeface.json`);
+    const font = await fontLoader.loadAsync(HelvetikerBold);
 
     const textMesh = new THREE.Mesh(
         new TextGeometry(text, {
