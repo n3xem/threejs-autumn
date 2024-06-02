@@ -10,6 +10,7 @@ import LandScapeWaterDraco from '../assets/models/landscape_water/landscape_wate
 import BenchDraco from '../assets/models/bench/benchDraco.glb';
 import MakiDraco from '../assets/models/maki/makiDraco.glb';
 import LoghouseDraco from '../assets/models/loghouse/loghouseDraco.glb';
+import DracoDecoderPath from './draco/'
 
 export function MTLAndOBJLoader(mtlPath: MyTHREE.MtlPath, objPath: MyTHREE.ObjPath, scene: THREE.Scene) {
     const mtlLoader = new MTLLoader();
@@ -38,7 +39,7 @@ export function EasyGLTFLoader(path: string, scene: THREE.Scene, size: MyTHREE.S
 
 export async function ModelLoader() {
     const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('/src/draco/');
+    dracoLoader.setDecoderPath(DracoDecoderPath);
     dracoLoader.setDecoderConfig({ type: 'js' });
     const loader = new GLTFLoader();
     loader.setDRACOLoader(dracoLoader);
