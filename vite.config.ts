@@ -10,5 +10,8 @@ export default defineConfig({
             }
         },
     },
-    assetsInclude: ['**/*.glb'],
+    assetsInclude: [
+        '**/*.glb',
+        '**/*.exr',
+    ],
 });
