@@ -1,6 +1,8 @@
 # threejs-autumn
 美しい秋の風景を3Dモデルで作成して時計とともに配信するサイトを作るプロジェクトです。
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/149631e5-fb53-4ad3-ab61-22f2fef6084a/deploy-status)](https://app.netlify.com/sites/3ds-miniture-garden/deploys)
+
 ## setup
 ```
 npm i
