@@ -5,6 +5,11 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import * as THREE from 'three';
 import * as MyTHREE from './types/three.js';
 import { Model3dPath } from './config.js';
+import LandScapeGroundDraco from '../assets/models/landscape_ground/landscape_groundDraco.glb';
+import LandScapeWaterDraco from '../assets/models/landscape_water/landscape_waterDraco.glb';
+import BenchDraco from '../assets/models/bench/benchDraco.glb';
+import MakiDraco from '../assets/models/maki/makiDraco.glb';
+import LoghouseDraco from '../assets/models/loghouse/loghouseDraco.glb';
 
 export function MTLAndOBJLoader(mtlPath: MyTHREE.MtlPath, objPath: MyTHREE.ObjPath, scene: THREE.Scene) {
     const mtlLoader = new MTLLoader();
@@ -34,18 +39,18 @@ export function EasyGLTFLoader(path: string, scene: THREE.Scene, size: MyTHREE.S
 export async function ModelLoader() {
     const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath('/draco/');
-    dracoLoader.setDecoderConfig({type: 'js'});
+    dracoLoader.setDecoderConfig({ type: 'js' });
     const loader = new GLTFLoader();
     loader.setDRACOLoader(dracoLoader);
 
     const [
         landscapeGroundModel, landscapeWaterModel, benchModel, firewoodModel, loghouseModel, // treeModel,
     ] = await Promise.all([
-        loader.loadAsync(Model3dPath + '/landscape_ground/landscape_groundDraco.glb'),
-        loader.loadAsync(Model3dPath + '/landscape_water/landscape_waterDraco.glb'),
-        loader.loadAsync(Model3dPath + '/bench/benchDraco.glb'),
-        loader.loadAsync(Model3dPath + '/maki/makiDraco.glb'),
-        loader.loadAsync(Model3dPath + '/loghouse/loghouseDraco.glb'),
+        loader.loadAsync(LandScapeGroundDraco),
+        loader.loadAsync(LandScapeWaterDraco),
+        loader.loadAsync(BenchDraco),
+        loader.loadAsync(MakiDraco),
+        loader.loadAsync(LoghouseDraco),
         // loader.loadAsync(Model3dPath + '/tree/tree_springDraco.glb'),
     ]);
 
