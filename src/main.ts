@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { EXRLoader } from "three/addons/loaders/EXRLoader.js";
 
 import { ModelLoader } from './loaders.js';
-import { HDRIPath } from './config.js';
+import SunFlowerPureSky1k from '../assets/HDRI/sunflowers_puresky_1k.exr';
 import { create3DTimeTextMesh } from './mesh.js';
 
 import { TextGeometry } from 'three/examples/jsm/Addons.js';
@@ -97,7 +97,7 @@ async function init() {
         scene.add(text);
     });
 
-    new EXRLoader().load(HDRIPath + "/sunflowers_puresky_1k.exr", (texture) => {
+    new EXRLoader().load(SunFlowerPureSky1k, (texture) => {
         texture.mapping = THREE.EquirectangularReflectionMapping;
         scene.environment = texture;
         scene.background = texture;
