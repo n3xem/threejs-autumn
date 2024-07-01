@@ -1,10 +1,10 @@
 {
   "type": "module",
   "dependencies": {
-    "three": "^0.165.0"
+    "three": "^0.166.0"
   },
   "devDependencies": {
-    "@types/three": "^0.165.0",
+    "@types/three": "^0.166.0",
     "typescript": "^5.4.5",
     "vite": "^5.2.12"
   },
